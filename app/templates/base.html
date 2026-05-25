@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% if title %}
+            {{ title }} - AtölyeŞef
+        {% else %}
+            AtölyeŞef - Ekipman Takip Sistemi
+        {% endif %}
+    </title>
+    <!-- Modern system font styling, premium CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('main.index') }}" class="logo-container">
+            <div class="logo-icon">A</div>
+            <div class="logo-text">AtölyeŞef</div>
+        </a>
+        <nav>
+            <a href="{{ url_for('main.index') }}" class="nav-link">Anasayfa</a>
+            <a href="{{ url_for('auth.login') }}" class="nav-btn">Giriş Yap</a>
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="card">
+            {% block content %}
+                <h2>Atölye ve Laboratuvar Ekipman Takip Sistemi</h2>
+                <p>Meslek Yüksek Okulu İnternet Programcılığı dersi için geliştirilen Flask 3.x uygulamasına hoş geldiniz.</p>
+                <p>Bu uygulama; atölye ve laboratuvar ekipmanlarının envanter takibini, durum kontrolünü ve zimmet yönetimini kolaylaştırmak amacıyla tasarlanmıştır.</p>
+                
+                {% if form %}
+                    <!-- Auth Login View Form Skeleton -->
+                    <div class="form-container" style="margin-top: 2rem;">
+                        <form method="POST" action="">
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control", placeholder="E-posta adresinizi girin") }}
+                                {% for error in form.email.errors %}
+                                    <span style="color: var(--error); font-size: 0.85rem;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.password.label(class="form-label") }}
+                                {{ form.password(class="form-control", placeholder="Şifrenizi girin") }}
+                                {% for error in form.password.errors %}
+                                    <span style="color: var(--error); font-size: 0.85rem;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-check">
+                                    {{ form.remember_me() }}
+                                    <span>{{ form.remember_me.label.text }}</span>
+                                </label>
+                            </div>
+                            {{ form.submit(class="btn-submit") }}
+                        </form>
+                    </div>
+                {% endif %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 <a href="{{ url_for('main.index') }}">AtölyeŞef</a>. Tüm Hakları Saklıdır.</p>
+    </footer>
+</body>
+</html>
