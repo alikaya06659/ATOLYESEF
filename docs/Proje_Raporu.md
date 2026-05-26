@@ -1,40 +1,72 @@
-# AtölyeŞef Kurulum Sonrası Proje Raporu
+# Proje Raporu – AtölyeŞef
 
-Bu rapor, **AtölyeŞef (Atölye ve Laboratuvar Ekipman Takip Sistemi)** projesinin iskelet kurulumunun ve yapılan testlerin sonuçlarını içerir.
+## Proje Tanımı
+AtölyeŞef, **Flask 3.x** üzerine inşa edilmiş, **Atölye ve Laboratuvar Ekipman Takip Sistemi**dir. Kullanıcılar sisteme kayıt olur, ekipmanları görüntüler ve rezervasyon (ödünç alma) işlemleri yapabilir.
 
----
+## Teknoloji Stack
+- **Python 3.11+**
+- **Flask 3.x** – Application Factory Pattern
+- **Flask‑SQLAlchemy 3.x** (SQLAlchemy 2.x `Mapped`/`mapped_column` sözdizimi)
+- **Flask‑Migrate** – Alembic tabanlı veritabanı göçleri
+- **Flask‑Login** – Kullanıcı oturum yönetimi
+- **Flask‑WTF** – Form ve CSRF koruması
+- **SQLite** (development) – `SQLALCHEMY_DATABASE_URI` ortam değişkeni üzerinden yapılandırılabilir
 
-## Gerçekleştirilen İşlemler
-1. **Dizin ve Dosya Yapısı:** Belirtilen iskelet yapısı birebir oluşturuldu.
-2. **Sanal Ortam ve Bağımlılıklar:**
-   - Python sanal ortamı (`venv`) kuruldu.
-   - Sadece ders için istenen kütüphaneler `requirements.txt` üzerinden sanal ortama yüklendi.
-3. **Güvenlik Önlemleri:** `.env` dosyası oluşturuldu ve `.gitignore` dosyası aracılığıyla sürüm kontrol sisteminden (Git) başarıyla gizlendi.
-4. **Veritabanı ve Konfigürasyon:** SQLite veritabanı bağlantısı `config.py` içinde `.env`'den beslenecek şekilde dinamik hale getirildi.
-5. **Modern Tasarım Entegrasyonu:** `app/static/css/style.css` ve `app/templates/base.html` dosyalarıyla modern koyu tema tasarımı yapıldı.
+## Mimari Tasarım
+```
++-------------------+        +-------------------+
+|   app/__init__.py | ---->  |   Flask app       |
++-------------------+        +-------------------+
+        |                              |
+        |                              |
+        v                              v
++-------------------+        +-------------------+
+|   app/models.py   | <----> |   SQLAlchemy ORM  |
++-------------------+        +-------------------+
+        |
+        |  One‑to‑Many
+        v
++-------------------+        +-------------------+
+|  app/main/       |        |   Blueprint      |
++-------------------+        +-------------------+
+```
+- **User** ↔ **Reservation** (1‑N)
+- **Equipment** ↔ **Reservation** (1‑N)
 
----
+## Kurulum
+```powershell
+# Proje klasörüne girin
+cd C:\Users\LENOVA\Documents\netprog
 
-## Test Doğrulama Raporu
+# Sanal ortam oluşturup aktif edin
+python -m venv venv
+.\venv\Scripts\Activate.ps1  # Powershell
 
-Projenin hatasız çalıştığını doğrulamak amacıyla `tests/test_basics.py` modülü altında birim testleri koşturulmuştur.
+# Bağımlılıkları yükleyin
+pip install -r requirements.txt
 
-### Koşturulan Komut
+# Veritabanı göçlerini çalıştırın
+flask db upgrade
+
+# Sunucuyu başlatın
+python run.py
+```
+Uygulama `http://127.0.0.1:5000` adresinde çalışır.
+
+## Testler
 ```bash
-python -m unittest tests/test_basics.py
+python -m unittest discover -s tests
 ```
+Temel route ve model import testleri içerir.
 
-### Test Sonuçları
-```text
-....
-----------------------------------------------------------------------
-Ran 4 tests in 0.144s
+## Deploy
+Uygulamayı bir WSGI sunucusuna (Gunicorn, uWSGI) veya **Docker** konteynerine yerleştirerek üretim ortamına aktarabilirsiniz. Çevre değişkenleri (`SECRET_KEY`, `SQLALCHEMY_DATABASE_URI`) güvenli bir şekilde yönetilmelidir.
 
-OK
-```
+## Gelecek Geliştirmeler
+- RESTful API (CRUD endpoint’leri)
+- Front‑end için **React/Vue** entegrasyonu
+- Ekipman durum takibi için **WebSocket** bildirimleri
+- Rol‑tabanlı yetkilendirme (admin, kullanıcı)
 
-### Doğrulanan Test Durumları:
-- **test_app_exists**: Flask uygulama nesnesinin başarıyla oluşturulduğunu doğrular.
-- **test_app_is_testing**: Test modunda uygulamanın doğru konfigürasyonla çalıştığını doğrular.
-- **test_index_page**: Anasayfaya yapılan isteğin `200 OK` döndürdüğünü ve modern arayüz başlığının (AtölyeŞef) sayfada yer aldığını doğrular.
-- **test_login_page**: Giriş yap sayfasına yapılan isteğin `200 OK` döndürdüğünü ve giriş formunun başarıyla render edildiğini doğrular.
+---
+*Bu rapor proje klasöründeki `docs/Proje_Raporu.md` dosyasında saklanmaktadır.*
