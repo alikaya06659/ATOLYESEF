@@ -2,8 +2,6 @@
 
 **AtölyeŞef**, Meslek Yüksek Okulu İnternet Programcılığı dersi kapsamında modern web geliştirme standartlarına uygun olarak tasarlanmış, **Flask 3.x** tabanlı bir atölye ve laboratuvar ekipman/zimmet takip sistemidir.
 
-Bu proje, sürdürülebilir, ölçeklenebilir ve temiz kod prensipleri benimsenerek **Application Factory Pattern** ve **Blueprint** mimarisi kullanılarak sıfırdan inşa edilmiştir.
-
 ---
 
 ## ✨ Öne Çıkan Özellikler
@@ -19,15 +17,15 @@ Bu proje, sürdürülebilir, ölçeklenebilir ve temiz kod prensipleri benimsene
 
 ## 🚀 Teknolojik Altyapı
 
-Projede yalnızca ders gereksinimlerine uygun olarak en verimli kütüphaneler kullanılmıştır:
+Proje yalnızca ders gereksinimlerine uygun olarak en verimli kütüphaneler kullanılmıştır:
 
 - **Core:** Python 3.11+ & Flask 3.x
-- **Veritabanı ve ORM:** Flask-SQLAlchemy (Modeller ve veritabanı sorguları için)
-- **Veritabanı Göçleri:** Flask-Migrate (Alembic tabanlı veritabanı şema yönetimi)
-- **Kullanıcı Yönetimi:** Flask-Login (Oturum açma/kapatma ve yetkilendirme)
-- **Form Yönetimi:** Flask-WTF (Güvenli CSRF korumalı formlar)
-- **Doğrulamalar:** email-validator (E-posta adresi doğrulamaları)
-- **Çevre Değişkenleri:** python-dotenv (Gizli anahtarlar ve veritabanı yollarının yönetimi)
+- **Veritabanı ve ORM:** Flask‑SQLAlchemy (SQLAlchemy 2.x stili) 
+- **Veritabanı Göçleri:** Flask‑Migrate (Alembic tabanlı)
+- **Kullanıcı Yönetimi:** Flask‑Login
+- **Form Yönetimi:** Flask‑WTF (CSRF korumalı formlar)
+- **Doğrulamalar:** email-validator
+- **Çevre Değişkenleri:** python-dotenv
 
 ---
 
@@ -44,21 +42,21 @@ atölyeşef/
 │   ├── auth/
 │   │   ├── __init__.py      # Auth Blueprint Tanımı
 │   │   ├── routes.py        # Giriş/Çıkış İşlemleri
-│   │   └── forms.py         # Login Form Sınıfı (Flask-WTF)
-│   ├── templates/
-│   │   └── base.html        # Premium Arayüz ve Ana HTML Şablonu
-│   └── static/
+│   │   └── forms.py         # Login Form Sınıfı (Flask‑WTF)
+│   ├── templates/          # Premium HTML Şablonları
+│   │   └── base.html        # Temel Layout ve Stil
+│   └── static/             # CSS & Görseller
 │       └── css/
 │           └── style.css    # Premium CSS Stil Dosyası
 ├── docs/                    # Geliştirme Raporları ve Planlar
 │   ├── Uygulama_Plani.md    # Teknik Mimari Tasarım Planı
 │   ├── Proje_Raporu.md      # Kurulum ve Test Doğrulama Raporu
-│   └── AI_Gunlugu.md        # Detaylı AI Geliştirme Günlüğü
+│   └── AI_Gunlugu.md        # AI Geliştirme Günlüğü
 ├── tests/                   # Birim Testleri
 │   ├── __init__.py
 │   └── test_basics.py       # Temel Uygulama Testleri
-├── config.py                # Dinamik Uygulama Konfigürasyonu
-├── requirements.txt         # Paket Bağımlılıkları Listesi
+├── config.py                # Dinamik Konfigürasyon
+├── requirements.txt         # Paket Bağımlılıkları
 ├── .env.example             # Örnek Çevre Değişkenleri
 ├── .gitignore               # Sürüm Kontrolünde Yoksayılacak Dosyalar
 └── run.py                   # Uygulama Giriş Noktası
@@ -70,25 +68,25 @@ atölyeşef/
 
 Projenizi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları sırasıyla uygulayabilirsiniz:
 
-### 1. Sanal Ortamı Etkinleştirin
-PowerShell veya Komut Satırı üzerinden proje dizinine girerek sanal ortamı aktif hale getirin:
+1. **Sanal Ortamı Etkinleştirin**
+   PowerShell veya Komut Satırı üzerinden proje dizinine girerek sanal ortamı aktif hale getirin:
 
-```powershell
-# PowerShell için:
-.\venv\Scripts\Activate.ps1
+   ```powershell
+   # PowerShell için:
+   .\venv\Scripts\Activate.ps1
 
-# Klasik CMD için:
-.\venv\Scripts\activate.bat
-```
+   # Klasik CMD için:
+   .\venv\Scripts\activate.bat
+   ```
 
-### 2. Uygulamayı Başlatın
-Uygulama sunucusunu çalıştırmak için:
+2. **Uygulamayı Başlatın**
+   Uygulama sunucusunu çalıştırmak için:
 
-```bash
-python run.py
-```
+   ```bash
+   python run.py
+   ```
 
-Sunucu başarıyla ayağa kalktığında tarayıcınızdan **`http://127.0.0.1:5000`** adresine giderek sistemi canlı olarak görebilirsiniz.
+   Sunucu başarıyla ayağa kalktığında tarayıcınızdan **`http://127.0.0.1:5000`** adresine giderek sistemi canlı olarak görebilirsiniz.
 
 ---
 
@@ -103,10 +101,13 @@ python -m unittest tests/test_basics.py
 ---
 
 ## 📄 Proje Geliştirme Günlükleri ve AI Raporları
+
 Projenin planlama, tasarım ve entegrasyon safhalarına ait tüm teknik belgelere `docs/` klasöründen erişebilirsiniz:
+
 1. 📋 **[Uygulama Planı (docs/Uygulama_Plani.md)](docs/Uygulama_Plani.md):** Proje başlamadan önce hazırlanan teknik mimari planı.
 2. 📊 **[Proje Raporu (docs/Proje_Raporu.md)](docs/Proje_Raporu.md):** Test doğrulama çıktıları ve yapılan işlerin özeti.
 3. 📓 **[AI Geliştirme Günlüğü (docs/AI_Gunlugu.md)](docs/AI_Gunlugu.md):** Yapay Zeka ile birlikte gerçekleştirilen tüm debug, kurulum ve geliştirme süreçlerinin kronolojik kaydı.
 
 ---
-*Bu proje İnternet Programcılığı Dersi için geliştirilmiştir. Tüm Hakları Saklıdır &copy; 2026.*
+
+*Bu proje İnternet Programcılığı Dersi için geliştirilmiştir. Tüm Hakları Saklıdır © 2026.*
