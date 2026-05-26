@@ -21,7 +21,13 @@
         </a>
         <nav>
             <a href="{{ url_for('main.index') }}" class="nav-link">Anasayfa</a>
-            <a href="{{ url_for('auth.login') }}" class="nav-btn">Giriş Yap</a>
+            {% if current_user.is_authenticated %}
+                <span class="nav-welcome">Hoş geldin, {{ current_user.username }}</span>
+                <a href="{{ url_for('auth.logout') }}" class="nav-btn">Çıkış Yap</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" class="nav-btn">Giriş Yap</a>
+                <a href="{{ url_for('auth.register') }}" class="nav-btn">Kayıt Ol</a>
+            {% endif %}
         </nav>
     </header>
 
@@ -41,40 +47,7 @@
 
         <div class="card">
             {% block content %}
-                <h2>Atölye ve Laboratuvar Ekipman Takip Sistemi</h2>
-                <p>Meslek Yüksek Okulu İnternet Programcılığı dersi için geliştirilen Flask 3.x uygulamasına hoş geldiniz.</p>
-                <p>Bu uygulama; atölye ve laboratuvar ekipmanlarının envanter takibini, durum kontrolünü ve zimmet yönetimini kolaylaştırmak amacıyla tasarlanmıştır.</p>
-                
-                {% if form %}
-                    <!-- Auth Login View Form Skeleton -->
-                    <div class="form-container" style="margin-top: 2rem;">
-                        <form method="POST" action="">
-                            {{ form.hidden_tag() }}
-                            <div class="form-group">
-                                {{ form.email.label(class="form-label") }}
-                                {{ form.email(class="form-control", placeholder="E-posta adresinizi girin") }}
-                                {% for error in form.email.errors %}
-                                    <span style="color: var(--error); font-size: 0.85rem;">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.password.label(class="form-label") }}
-                                {{ form.password(class="form-control", placeholder="Şifrenizi girin") }}
-                                {% for error in form.password.errors %}
-                                    <span style="color: var(--error); font-size: 0.85rem;">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                            <div class="form-group">
-                                <label class="form-check">
-                                    {{ form.remember_me() }}
-                                    <span>{{ form.remember_me.label.text }}</span>
-                                </label>
-                            </div>
-                            {{ form.submit(class="btn-submit") }}
-                        </form>
-                    </div>
-                {% endif %}
-            {% endblock %}
+{% endblock %}
         </div>
     </main>
 

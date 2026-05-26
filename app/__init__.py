@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from config import Config
+from app.models import User
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -12,6 +13,11 @@ migrate = Migrate()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'info'
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Flask-Login callback – load a User by primary key."""
+    return db.session.get(User, int(user_id))
 
 def create_app(config_class=Config):
     """Create and configure the Flask application."""
