@@ -59,6 +59,13 @@ python -m unittest discover -s tests
 ```
 Temel route ve model import testleri içerir.
 
+## Uygulanan Özellikler
+- **Kimlik Doğrulama**: Kullanıcı kayıt, giriş ve oturum yönetimi (Flask-Login).
+- **Ekipman Yönetimi (CRUD)**: Ekipman ekleme, listeleme, güncelleme ve silme operasyonları (Yetkilendirmeli erişim).
+  - SQLAlchemy 2.x `db.paginate` ile sunucu taraflı sayfalama (sayfa başı 10 kayıt).
+  - SQLAlchemy `ilike` kullanımı ile ad, kod ve laboratuvar alanlarında esnek arama özelliği.
+  - Silme işlemlerinde yanlışlıkla veri kaybını önlemek için CSRF korumalı form / modal onay mekanizması.
+
 ## Deploy
 Uygulamayı bir WSGI sunucusuna (Gunicorn, uWSGI) veya **Docker** konteynerine yerleştirerek üretim ortamına aktarabilirsiniz. Çevre değişkenleri (`SECRET_KEY`, `SQLALCHEMY_DATABASE_URI`) güvenli bir şekilde yönetilmelidir.
 
