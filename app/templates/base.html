@@ -23,6 +23,7 @@
             <a href="{{ url_for('main.index') }}" class="nav-link">Anasayfa</a>
             {% if current_user.is_authenticated %}
                 <span class="nav-welcome">Hoş geldin, {{ current_user.username }}</span>
+                <a href="{{ url_for('auth.profile') }}" class="nav-btn">Profil</a>
                 <a href="{{ url_for('auth.logout') }}" class="nav-btn">Çıkış Yap</a>
             {% else %}
                 <a href="{{ url_for('auth.login') }}" class="nav-btn">Giriş Yap</a>
