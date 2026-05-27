@@ -1,5 +1,24 @@
 # 🛠️ AtölyeŞef: Atölye ve Laboratuvar Ekipman Takip Sistemi
 
+![CI](https://github.com/alikaya06659/ATOLYESEF/actions/workflows/ci.yml/badge.svg)
+
+**AtölyeŞef**, Flask 3.x ve SQLAlchemy 2.x ile geliştirilmiş, modern web standartlarına uygun bir ekipman/zimmet takibi uygulamasıdır.
+
+## ✨ Öne Çıkan Özellikler
+- Flask 3.x, Application Factory, Blueprint Mimarisi
+- Premium UI – Google Fonts (Outfit), dark‑mode, Bootstrap 5
+- **Kullanıcı Kimlik Doğrulama (Auth)**: Flask‑Login, Flask‑WTF, CSRF koruması, güvenli kayıt/giriş/çıkış akışı
+- **Profil Sayfası**: `/auth/profile` – oturum açmış kullanıcılar için
+- Güvenlik – parola hash’leme, benzersiz kullanıcı adı/e‑posta kontrolleri
+- Kapsamlı test altyapısı ve AI geliştirme günlükleri
+
+## 📄 Dokümantasyon
+- **Uygulama Planı**: `docs/Uygulama_Plani.md`
+- **Proje Raporu**: `docs/Proje_Raporu.md`
+- **AI Geliştirme Günlüğü**: `docs/AI_Gunlugu.md`
+
+*Bu proje İnternet Programcılığı dersi kapsamında geliştirilmiştir. © 2026*
+
 **AtölyeŞef**, Meslek Yüksek Okulu İnternet Programcılığı dersi kapsamında modern web geliştirme standartlarına uygun olarak tasarlanmış, **Flask 3.x** tabanlı bir atölye ve laboratuvar ekipman/zimmet takip sistemidir.
 
 ---
@@ -223,4 +242,18 @@ Projenin planlama, tasarım ve entegrasyon safhalarına ait tüm teknik belgeler
 
 ---
 
-*Bu proje İnternet Programcılığı Dersi için geliştirilmiştir. Tüm Hakları Saklıdır © 2026.*
+*Bu proje İnternet Programcılığı Dersi için geliştirilmiştir. Tüm Hakları Saklıdır © 2026*
+
+## 📦 Equipment CRUD Özellikleri
+
+- **Listeleme**: `/equipments` rotası, ekipmanları tablo halinde gösterir (Bootstrap 5 ile biçimlendirildi).
+- **Sayfalama**: Sayfa başına 10 kayıt, `?page=` parametresi (SQLAlchemy 2.x `db.paginate` kullanılarak).
+- **Arama**: Üstteki arama çubuğu `?q=` ile `name`, `code`, `laboratory` alanlarında arama yapar (SQLAlchemy `ilike` kullanımı).
+- **Ekleme**: `/equipment/new` (login_required) yeni ekipman ekleme formu (Flask-WTF).
+- **Düzenleme**: `/equipment/<int:id>/edit` (login_required) mevcut ekipmanı güncelleme.
+- **Silme**: `/equipment/<int:id>/delete` POST (login_required) ekipman silme, CSRF korumalı güvenli form yapısı.
+
+---
+< ! - -   D u m m y   c o m m i t   1   - - >  
+ #   D u m m y   c o m m i t   1  
+ 
