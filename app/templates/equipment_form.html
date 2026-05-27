@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if title %}{{ title }} - AtölyeŞef{% else %}AtölyeŞef{% endif %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">{{ title }}</h2>
+        <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control {% if form.name.errors %}is-invalid{% endif %}") }}
+                {% for error in form.name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.code.label(class="form-label") }}
+                {{ form.code(class="form-control {% if form.code.errors %}is-invalid{% endif %}") }}
+                {% for error in form.code.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.laboratory.label(class="form-label") }}
+                {{ form.laboratory(class="form-control {% if form.laboratory.errors %}is-invalid{% endif %}") }}
+                {% for error in form.laboratory.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.status.label(class="form-label") }}
+                {{ form.status(class="form-select {% if form.status.errors %}is-invalid{% endif %}") }}
+                {% for error in form.status.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+            <a href="{{ url_for('main.equipments') }}" class="btn btn-secondary ms-2">İptal</a>
+        </form>
+    </div>
+</body>
+</html>
