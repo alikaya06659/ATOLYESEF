@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from app import db
 from app.auth import bp
 from app.auth.forms import LoginForm, RegisterForm
@@ -34,8 +34,8 @@ def register():
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', title='Kayıt Ol', form=form)
 
-@bp.route('/logout')
-def logout():
-    logout_user()
-    flash('Başarıyla çıkış yaptınız!', 'info')
-    return redirect(url_for('main.index'))
+@bp.route('/profile')
+@login_required
+def profile():
+    """Kullanıcı profil sayfası – sadece oturum açık kullanıcılar erişebilir."""
+    return render_template('auth/profile.html', title='Profil', user=current_user)
