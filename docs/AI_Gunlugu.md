@@ -1,73 +1,22 @@
-# AtölyeŞef - AI Geliştirme Günlüğü (AI Developer Log)
+# AI Geliştirme Günlüğü
 
-Bu günlük, **AtölyeŞef (Atölye ve Laboratuvar Ekipman Takip Sistemi)** projesinin başlangıcından itibaren yapay zeka (AI) asistanı ile birlikte gerçekleştirilen tüm planlama, geliştirme, hata giderme ve entegrasyon süreçlerinin kronolojik kaydıdır.
+## 2026-05-26
+- **09:15**: Kullanıcı kayıt, giriş ve çıkış (auth) akışı için Flask‑WTF formları (`RegisterForm`, `LoginForm`) tanımlandı. Validatorler (`DataRequired`, `Email`, `EqualTo`) ve benzersiz kontrol metodları (`validate_username`, `validate_email`) eklendi.
+- **09:45**: `app/auth/routes.py` içinde `/login`, `/register`, `/logout` rotaları oluşturuldu. `login_user`, `logout_user`, `flash` mesajları ve `current_user.is_authenticated` yönlendirmeleri eklendi.
+- **10:20**: `app/__init__.py` içerisine `LoginManager` yapılandırması ve `@login_manager.user_loader` callback’i eklendi (`db.session.get(User, int(user_id))`).
+- **11:00**: Bootstrap 5 ile şık, ortalanmış kart tasarımlı `login.html` ve `register.html` şablonları oluşturuldu; CSRF koruması için `{{ form.hidden_tag() }}` eklendi ve hatalar `invalid-feedback` ile gösterildi.
+- **11:30**: `base.html` navbarına dinamik butonlar (`Giriş Yap`, `Kayıt Ol`, `Hoş geldin, …`, `Çıkış Yap`) eklendi.
+- **12:00**: Profil sayfası (`/auth/profile`) için route ve `profile.html` şablonu eklendi; sadece oturum açık kullanıcılar erişebilir.
+- **12:45**: README ve `docs/Uygulama_Plani.md` güncellendi; yeni auth ve profil bilgileri, AI günlüklerine referanslar eklendi.
+- **13:15**: Değişiklikler commit edildi (`Add full authentication flow with secure forms, templates, and updated documentation`).
+- **13:30**: Ek olarak profil route ve şablonu commit edildi (`Add profile route and template`), AI geliştirme günlüğü dosyası oluşturuldu ve push edildi.
 
----
+## 2026-05-27
+- **14:00**: Equipment CRUD (liste, sayfalama, arama, yeni, düzenle, sil) özellikleri eklendi. `EquipmentForm`, `equipment_list.html`, `equipment_form.html`, ilgili rotalar ve SQLAlchemy 2.x paginate kullanımı oluşturuldu. Bootstrap 5 ile premium UI ve CSRF korumalı silme butonu eklendi.
 
-## 📅 Oturum Bilgileri
-- **Tarih:** 25-26 Mayıs 2026
-- **Proje Sahibi:** @alikaya06659
-- **Geliştirici Asistanı:** Antigravity (Google DeepMind)
-- **Kullanılan Teknoloji:** Flask 3.x, Python 3.11+, Git, PowerShell, Winget
-
----
-
-## 🛠️ Adım Adım Geliştirme Süreci
-
-### Adım 1: Gereksinimlerin Çözümlenmesi ve Planlama (Planning Mode)
-- **Tarih/Saat:** 25.05.2026 - 23:10
-- **İşlem:** Kullanıcıdan gelen "Application Factory Pattern kullanan, Blueprint'lere ayrılmış Flask 3.x proje iskeleti" talebi incelendi.
-- **Kararlar:**
-  - Bağımlılıkların yalnızca talep edilen 7 kütüphane ile sınırlandırılması kararlaştırıldı (`flask`, `flask-sqlalchemy`, `flask-migrate`, `flask-login`, `flask-wtf`, `python-dotenv`, `email-validator`).
-  - `.env` dosyasının kesinlikle `.gitignore` içinde tutulması kuralı onaylandı.
-  - Kod yazımına başlanmadan önce detaylı bir **[Uygulama Planı](Uygulama_Plani.md)** oluşturuldu ve kullanıcının onayına sunuldu.
-
-### Adım 2: Onay ve Temel Kodların Oluşturulması
-- **Tarih/Saat:** 25.05.2026 - 23:13
-- **İşlem:** Kullanıcının onayından sonra tüm iskelet dosyalar sırayla oluşturuldu.
-- **Oluşturulan Dosyalar:**
-  - `requirements.txt` (Sadece talep edilen bağımlılıklar)
-  - `.gitignore` (Gizlilik ve derleme yoksayma ayarları)
-  - `config.py` (Çevre değişkeni tabanlı yapılandırma)
-  - `run.py` (Uygulama giriş noktası)
-  - `app/__init__.py` (Application factory ve eklentilerin ilklendirilmesi)
-  - `app/models.py` (Kullanıcı modeli şablonu)
-  - `app/main/` & `app/auth/` (Route ve form bileşenleri)
-  - `app/templates/base.html` & `app/static/css/style.css` (Premium koyu tema tasarımı)
-
-### Adım 3: Sanal Ortam (venv) Kurulumu ve Bağımlılıkların Yüklenmesi
-- **Tarih/Saat:** 25.05.2026 - 23:17
-- **İşlem:** Sistem üzerinde temiz bir Python sanal ortamı (`venv`) oluşturuldu. 
-- **Komut:** `python -m venv venv`
-- **İşlem:** Sanal ortam içerisindeki pip modülü aracılığıyla `requirements.txt` içerisindeki tüm Flask 3.x paketleri kuruldu.
-
-### Adım 4: Test Süreci ve Hata Giderme (Debugging)
-- **Tarih/Saat:** 25.05.2026 - 23:19
-- **İşlem:** Uygulama sağlığını test etmek için `tests/test_basics.py` çalıştırıldı.
-- **Karşılaşılan Sorunlar & Çözümler:**
-  1. **User Loader Hatası:** `flask_login` eklentisi `user_loader` eksikliği nedeniyle hata verdi.
-     - *Sebep:* `app/__init__.py` içinde `models.py` dosyasının içe aktarılmaması (ve dolayısıyla decorator'ın çalışmaması).
-     - *Çözüm:* Factory fonksiyonu sonuna `from app import models` satırı eklendi.
-  2. **Türkçe Karakter / Case Uyuşmazlığı:** Anasayfa testinde `Atölyeşef` araması başarısız oldu.
-     - *Sebep:* Şablondaki kelimenin büyük harfle `AtölyeŞef` yazılmış olması.
-     - *Çözüm:* Test dosyasındaki assert metni `AtölyeŞef` olarak güncellendi.
-- **Sonuç:** 4 birim testinin tamamı başarıyla (`OK`) tamamlandı.
-
-### Adım 5: Sistem Altyapısının Kurulması (Winget & Git)
-- **Tarih/Saat:** 25.05.2026 - 23:33
-- **İşlem:** Projeyi GitHub'a göndermek için sistemde Git yüklü olmadığı tespit edildi.
-- **Çözüm:** Windows Package Manager (`winget`) aracılığıyla sisteme sessiz ve hızlıca en güncel resmi Git paketi kuruldu.
-- **Komut:** `winget install --id Git.Git -e --silent`
-
-### Adım 6: GitHub Entegrasyonu ve Güvenli Gönderim (Push)
-- **Tarih/Saat:** 26.05.2026 - 00:42
-- **İşlem:** Kullanıcı tarafından sağlanan geçici kişisel erişim token'ı (PAT) kullanılarak Git deposu başlatıldı ve kodlar uzak sunucuya aktarıldı.
-- **Çözüm:** 
-  1. Git deposu ilklendirildi ve yerel yazar bilgileri yapılandırıldı.
-  2. Dosyalar commit edilerek `main` dalı üzerinden GitHub'a gönderildi.
-  3. **Güvenlik Politikası:** Gönderim biter bitmez yerel ayarlardan token temizlendi ve uzak depo adresi sadeleştirildi.
-
----
-
-## 🏆 Son Durum Raporu
-Proje, MYO İnternet Programcılığı dersi standartlarının çok üzerinde; hem kod kalitesi (Application Factory, Blueprints, OOP Config), hem güvenliği (.gitignore kuralları, temiz token yönetimi), hem de görsel arayüz estetiğiyle (Dark Mode CSS) başarıyla yayına alınmıştır.
+- **22:00**: Equipment modelinin tüm CRUD (Create, Read, Update, Delete) işlemleri, sayfalama ve arama özellikleriyle tamamlandı.
+  - `EquipmentForm` WTForms ile oluşturuldu.
+  - SQLAlchemy 2.x `db.paginate(db.select(Equipment)...)` yapısı kullanılarak 10 kayıtlık sayfalama eklendi.
+  - Arama özelliği `ilike` metodu kullanılarak entegre edildi.
+  - İşlemlerin tümü Bootstrap 5 ile görsel olarak desteklendi ve Türkçe flash mesajlar ile kullanıcıya geri bildirim sağlandı.
+  - Kod GitHub deposuna entegre edildi ve proje raporları güncellendi.
