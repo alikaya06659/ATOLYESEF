@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}Ekipman Listesi{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">Ekipman Listesi</h2>
+  <!-- Arama Çubuğu -->
+  <form method="GET" action="{{ url_for('main.equipments') }}" class="row g-2 mb-3">
+    <div class="col-md-9">
+      <input type="text" name="q" class="form-control" placeholder="İsim, kod veya laboratuvar ara..." value="{{ search }}">
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-primary w-100">Ara</button>
+    </div>
+  </form>
+  <!-- Ekipman Tablosu -->
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>İsim</th>
+          <th>Kod</th>
+          <th>Laboratuvar</th>
+          <th>Durum</th>
+          <th>Eklenme</th>
+          <th>İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for eq in equipments %}
+        <tr>
+          <td>{{ eq.id }}</td>
+          <td>{{ eq.name }}</td>
+          <td>{{ eq.code }}</td>
+          <td>{{ eq.laboratory }}</td>
+          <td>{{ eq.status }}</td>
+          <td>{{ eq.created_at.strftime('%d.%m.%Y') if eq.created_at else '' }}</td>
+          <td>
+            <a href="{{ url_for('main.equipment_edit', id=eq.id) }}" class="btn btn-sm btn-outline-success me-1">Düzenle</a>
+            <!-- Silme Butonu -->
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ eq.id }}">Sil</button>
+            <!-- Silme Modal -->
+            <div class="modal fade" id="deleteModal{{ eq.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ eq.id }}" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel{{ eq.id }}">Silme Onayı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>"{{ eq.name }}" ekipmanını silmek istediğinizden emin misiniz?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <form method="POST" action="{{ url_for('main.equipment_delete', id=eq.id) }}">
+                      {{ csrf_token() }}
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                      <button type="submit" class="btn btn-danger">Evet, Sil</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted">Kayıt bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Sayfalama -->
+  <nav aria-label="Sayfalama">
+    <ul class="pagination justify-content-center">
+      {% if pagination.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('main.equipments', page=pagination.prev_num, q=search) }}" aria-label="Önceki"><span aria-hidden="true">&laquo;</span></a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+      {% endif %}
+      {% for p in pagination.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+        {% if p %}
+          {% if p == pagination.page %}
+            <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('main.equipments', page=p, q=search) }}">{{ p }}</a></li>
+          {% endif %}
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+      {% endfor %}
+      {% if pagination.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('main.equipments', page=pagination.next_num, q=search) }}" aria-label="Sonraki"><span aria-hidden="true">&raquo;</span></a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  <div class="mt-3 text-center">
+    <a href="{{ url_for('main.equipment_create') }}" class="btn btn-success">Yeni Ekipman Ekle</a>
+  </div>
+</div>
+{% endblock %}
