@@ -30,3 +30,9 @@
   - `UpdateProfileForm` içerisine resim uzantı korumalı (`FileAllowed`) avatar yükleme alanı eklendi.
   - `/profile` rotasında, `werkzeug.utils.secure_filename` kullanılarak güvenli dosya kaydetme gerçekleştirildi.
   - Profil sayfasında Aktif ve Geçmiş rezervasyon listeleri ayrıştırıldı.
+- **23:20**: Hata yönetimi (Error Handling) ve RESTful API katmanı eklendi.
+  - `app/main/errors.py` oluşturularak 404 (Sayfa Bulunamadı) ve 500 (Sunucu Hatası) durumları için özel yakalayıcılar (`@bp.app_errorhandler`) tanımlandı.
+  - Bootstrap 5 ile şıklaştırılmış `404.html` ve `500.html` şablonları eklendi.
+  - `app/main/routes.py` içine `GET /api/v1/equipments` RESTful API endpoint'i eklendi.
+  - SQLAlchemy `db.select(Equipment)` ile sorgulanan veriler güvenli bir sözlük (dict) yapısına çevrildikten sonra `jsonify` ile sunuldu.
+  - `config.py` içerisine Türkçe karakter desteği için `JSON_AS_ASCII = False` kuralı eklendi.

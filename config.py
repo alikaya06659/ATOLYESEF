@@ -20,6 +20,9 @@ class Config:
 
     # Track modifications kapalı (performans için)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # JSON çıktılarında Türkçe (ASCII dışı) karakter desteği
+    JSON_AS_ASCII = False
 class TestConfig(Config):
     """Testing configuration – uses in‑memory SQLite DB and enables testing mode."""
     TESTING = True

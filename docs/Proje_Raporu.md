@@ -70,12 +70,13 @@ Temel route ve model import testleri içerir.
 - **Profil ve Avatar Yönetimi**: Kullanıcılara ait bir profil sayfası oluşturularak form doğrulama süreçleri entegre edildi.
   - Yüklenen profil fotoğrafları `secure_filename` fonksiyonu ile güvenli olarak kaydedilir.
   - Kullanıcıların geçmiş ve aktif tüm rezervasyonları bu sayfa üzerinden yönetilebilmektedir.
+- **Özel Hata Yönetimi**: 404 (Sayfa Bulunamadı) ve 500 (Sunucu Hatası) gibi hatalar özelleştirilmiş, Bootstrap 5 uyumlu ve kullanıcıyı ana sayfaya yönlendiren şablonlarla kaplandı.
+- **RESTful API**: Harici servislerin ekipman listesine JSON formatında ulaşabilmesi için `GET /api/v1/equipments` ucu oluşturuldu (Türkçe karakter desteği sağlandı).
 
 ## Deploy
 Uygulamayı bir WSGI sunucusuna (Gunicorn, uWSGI) veya **Docker** konteynerine yerleştirerek üretim ortamına aktarabilirsiniz. Çevre değişkenleri (`SECRET_KEY`, `SQLALCHEMY_DATABASE_URI`) güvenli bir şekilde yönetilmelidir.
 
 ## Gelecek Geliştirmeler
-- RESTful API (CRUD endpoint’leri)
 - Front‑end için **React/Vue** entegrasyonu
 - Ekipman durum takibi için **WebSocket** bildirimleri
 - Rol‑tabanlı yetkilendirme (admin, kullanıcı)

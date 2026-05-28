@@ -15,6 +15,8 @@
 - 🔐 **Kullanıcı Kimlik Doğrulama (Auth):** Flask‑Login, Flask‑WTF ve CSRF korumalı formlarla tam güvenli kayıt, giriş ve çıkış akışı.
 - 👤 **Profil ve Avatar Yönetimi:** Kullanıcıların bilgilerini güncelleyebileceği, güvenli (secure_filename) avatar yükleme destekli kişisel profil sayfası.
 - 📦 **Rezervasyon Takibi:** Ekipmanların "Ödünç Al" ve "İade Et" işlemleriyle takip edildiği, geçmiş işlemleri barındıran yetki kontrollü rezervasyon akışı.
+- 🚨 **Özel Hata Yönetimi:** Bootstrap 5 tasarımlı 404 (Sayfa Bulunamadı) ve 500 (Sunucu Hatası) sayfalarıyla kullanıcı dostu hata yönlendirmesi.
+- 🔌 **RESTful API Desteği:** Dış sistemlerin veritabanındaki ekipmanlara JSON formatında erişebilmesi için oluşturulmuş özel API katmanı.
 - 🛡️ **Güvenlik Politikası:** Çevre değişkenlerinin (`.env`) ve yerel veritabanlarının sürüm kontrol sisteminde (Git) güvenle yoksayılması, parola hash'leme.
 - 🧪 **Kapsamlı Test Altyapısı:** Uygulama modülleri, konfigürasyonu ve temel route erişimlerini doğrulayan entegre birim testleri.
 
@@ -28,6 +30,16 @@
 - **Ekleme/Düzenleme/Silme**: Flask-WTF tabanlı formlar ve CSRF korumalı silme işlemleri.
 - **Ödünç Alma**: "Mevcut" durumdaki ekipmanlar için `POST /equipment/<int:id>/borrow` kullanılarak otomatik rezervasyon kaydı oluşturulur.
 - **İade Etme**: Sadece işlemi yapan kullanıcı tarafından, profil ekranı üzerinden `POST /reservation/<int:id>/return` ile gerçekleştirilen ve ekipmanı tekrar "Mevcut" duruma çeken yetki kontrollü işleyiş.
+
+---
+
+## 🔌 API Kullanımı
+
+Sistemdeki güncel ekipman durumlarını dışarıdan çekmek için aşağıdaki uç noktayı (endpoint) kullanabilirsiniz:
+
+- **Endpoint:** `GET /api/v1/equipments`
+- **Yanıt Tipi:** `application/json`
+- **Açıklama:** Veritabanında kayıtlı tüm ekipmanların id, name, code, laboratory ve status bilgilerini içeren serileştirilmiş bir JSON dizisi döndürür. Türkçe karakter desteği (UTF-8) mevcuttur.
 
 ---
 

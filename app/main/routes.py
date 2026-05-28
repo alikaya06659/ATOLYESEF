@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, abort
+from flask import render_template, redirect, url_for, flash, request, abort, jsonify
 from flask_login import login_required
 from app import db
 from app.main import bp
@@ -142,3 +142,24 @@ def equipment_return(id):
     db.session.commit()
     flash('Ekipman başarıyla iade edildi.', 'success')
     return redirect(url_for('auth.profile'))
+
+# ---------------------------------------------------------------------------
+# API: RESTful endpoint for equipments
+# ---------------------------------------------------------------------------
+@bp.route('/api/v1/equipments', methods=['GET'])
+def api_equipments():
+    stmt = db.select(Equipment).order_by(Equipment.id)
+    equipments_raw = db.session.execute(stmt).scalars().all()
+    
+    equipments_data = [
+        {
+            "id": eq.id,
+            "name": eq.name,
+            "code": eq.code,
+            "laboratory": eq.laboratory,
+            "status": eq.status
+        }
+        for eq in equipments_raw
+    ]
+    
+    return jsonify(equipments_data)
