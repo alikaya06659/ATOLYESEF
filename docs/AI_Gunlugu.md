@@ -20,3 +20,13 @@
   - Arama özelliği `ilike` metodu kullanılarak entegre edildi.
   - İşlemlerin tümü Bootstrap 5 ile görsel olarak desteklendi ve Türkçe flash mesajlar ile kullanıcıya geri bildirim sağlandı.
   - Kod GitHub deposuna entegre edildi ve proje raporları güncellendi.
+
+## 2026-05-28
+- **13:30**: Ekipman ödünç alma (borrow) ve iade etme (return) işlemleri tamamlandı.
+  - `POST /equipment/<int:id>/borrow` rotasında ekipman durumu güncellenip `Reservation` tablosuna kayıt atıldı.
+  - `POST /reservation/<int:id>/return` rotasında sahiplik (yetki) kontrolü eklendi ve güvenli iade sağlandı.
+- **13:35**: Kullanıcı profil sayfası (Avatar yükleme ve Rezervasyonlar) eklendi.
+  - `app/models.py` içindeki `User` modeline `avatar` alanı entegre edildi.
+  - `UpdateProfileForm` içerisine resim uzantı korumalı (`FileAllowed`) avatar yükleme alanı eklendi.
+  - `/profile` rotasında, `werkzeug.utils.secure_filename` kullanılarak güvenli dosya kaydetme gerçekleştirildi.
+  - Profil sayfasında Aktif ve Geçmiş rezervasyon listeleri ayrıştırıldı.

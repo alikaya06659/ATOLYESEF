@@ -3,7 +3,9 @@ from flask_login import login_required
 from app import db
 from app.main import bp
 from app.main.forms import EquipmentForm
-from app.models import Equipment
+from app.models import Equipment, Reservation
+from flask_login import current_user
+from datetime import datetime
 
 # ---------------------------------------------------------------------------
 # Ana sayfa (ileride yönlendirme amaçlı)
@@ -92,3 +94,51 @@ def equipment_delete(id):
     db.session.commit()
     flash('Ekipman başarıyla silindi.', 'success')
     return redirect(url_for('main.equipments'))
+
+# ---------------------------------------------------------------------------
+# Ekipman Ödünç Alma (POST)
+# ---------------------------------------------------------------------------
+@bp.route('/equipment/<int:id>/borrow', methods=['POST'])
+@login_required
+def equipment_borrow(id):
+    equipment = db.get_or_404(Equipment, id)
+    if equipment.status != 'Mevcut':
+        flash('Bu ekipman şu anda kullanılamaz.', 'danger')
+        return redirect(url_for('main.equipments'))
+    
+    equipment.status = 'Kullanımda'
+    reservation = Reservation(
+        user_id=current_user.id,
+        equipment_id=equipment.id,
+        borrow_date=datetime.utcnow()
+    )
+    db.session.add(reservation)
+    db.session.commit()
+    flash('Ekipman başarıyla ödünç alındı.', 'success')
+    return redirect(url_for('main.equipments'))
+
+# ---------------------------------------------------------------------------
+# Ekipman İade Etme (POST)
+# ---------------------------------------------------------------------------
+@bp.route('/reservation/<int:id>/return', methods=['POST'])
+@login_required
+def equipment_return(id):
+    reservation = db.get_or_404(Reservation, id)
+    # Yetki kontrolü: Sadece kendi aldığı ekipmanı iade edebilir
+    if reservation.user_id != current_user.id:
+        abort(403)
+    
+    if reservation.is_returned:
+        flash('Bu ekipman zaten iade edilmiş.', 'info')
+        return redirect(url_for('auth.profile'))
+        
+    reservation.is_returned = True
+    reservation.return_date = datetime.utcnow()
+    
+    # İlgili ekipmanı tekrar "Mevcut" yap
+    if reservation.equipment:
+        reservation.equipment.status = 'Mevcut'
+        
+    db.session.commit()
+    flash('Ekipman başarıyla iade edildi.', 'success')
+    return redirect(url_for('auth.profile'))

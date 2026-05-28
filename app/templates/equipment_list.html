@@ -37,6 +37,14 @@
           <td>{{ eq.created_at.strftime('%d.%m.%Y') if eq.created_at else '' }}</td>
           <td>
             <a href="{{ url_for('main.equipment_edit', id=eq.id) }}" class="btn btn-sm btn-outline-success me-1">Düzenle</a>
+            
+            {% if eq.status == 'Mevcut' %}
+            <form method="POST" action="{{ url_for('main.equipment_borrow', id=eq.id) }}" class="d-inline">
+              {{ csrf_token() }}
+              <button type="submit" class="btn btn-sm btn-outline-primary me-1">Ödünç Al</button>
+            </form>
+            {% endif %}
+
             <!-- Silme Butonu -->
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ eq.id }}">Sil</button>
             <!-- Silme Modal -->

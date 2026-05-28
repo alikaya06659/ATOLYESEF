@@ -31,6 +31,9 @@ class User(db.Model):
     password_hash: db.Mapped[str] = db.mapped_column(
         db.String(256), nullable=False
     )
+    avatar: db.Mapped[Optional[str]] = db.mapped_column(
+        db.String(255), nullable=True, default="default.png"
+    )
     created_at: db.Mapped[datetime] = db.mapped_column(
         db.DateTime, default=datetime.utcnow, nullable=False
     )

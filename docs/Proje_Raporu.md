@@ -65,6 +65,11 @@ Temel route ve model import testleri içerir.
   - SQLAlchemy 2.x `db.paginate` ile sunucu taraflı sayfalama (sayfa başı 10 kayıt).
   - SQLAlchemy `ilike` kullanımı ile ad, kod ve laboratuvar alanlarında esnek arama özelliği.
   - Silme işlemlerinde yanlışlıkla veri kaybını önlemek için CSRF korumalı form / modal onay mekanizması.
+- **Ekipman Ödünç Alma ve İade Etme (Rezervasyon)**: Kullanıcıların "Mevcut" durumdaki ekipmanları ödünç alabilmesi ve sonrasında iade edebilmesi sağlandı.
+  - İade işlemlerinde güvenlik odaklı sahiplik yetki kontrolü (`abort(403)`) uygulandı.
+- **Profil ve Avatar Yönetimi**: Kullanıcılara ait bir profil sayfası oluşturularak form doğrulama süreçleri entegre edildi.
+  - Yüklenen profil fotoğrafları `secure_filename` fonksiyonu ile güvenli olarak kaydedilir.
+  - Kullanıcıların geçmiş ve aktif tüm rezervasyonları bu sayfa üzerinden yönetilebilmektedir.
 
 ## Deploy
 Uygulamayı bir WSGI sunucusuna (Gunicorn, uWSGI) veya **Docker** konteynerine yerleştirerek üretim ortamına aktarabilirsiniz. Çevre değişkenleri (`SECRET_KEY`, `SQLALCHEMY_DATABASE_URI`) güvenli bir şekilde yönetilmelidir.

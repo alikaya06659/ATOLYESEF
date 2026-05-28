@@ -13,20 +13,21 @@
 - 🧩 **Blueprint Mimarisi:** Uygulamanın anasayfa (`main`) ve kimlik doğrulama (`auth`) bölümlerine temiz bir şekilde ayrılması.
 - 🎨 **Premium Arayüz Deneyimi:** Google Fonts (Outfit) tabanlı, modern animasyonlu ve degrade geçişli estetik koyu tema (dark mode) tasarımı, Bootstrap 5 bileşenleri.
 - 🔐 **Kullanıcı Kimlik Doğrulama (Auth):** Flask‑Login, Flask‑WTF ve CSRF korumalı formlarla tam güvenli kayıt, giriş ve çıkış akışı.
-- 👤 **Profil Sayfası:** Sadece oturum açmış kullanıcıların erişebileceği `/auth/profile` sayfası.
+- 👤 **Profil ve Avatar Yönetimi:** Kullanıcıların bilgilerini güncelleyebileceği, güvenli (secure_filename) avatar yükleme destekli kişisel profil sayfası.
+- 📦 **Rezervasyon Takibi:** Ekipmanların "Ödünç Al" ve "İade Et" işlemleriyle takip edildiği, geçmiş işlemleri barındıran yetki kontrollü rezervasyon akışı.
 - 🛡️ **Güvenlik Politikası:** Çevre değişkenlerinin (`.env`) ve yerel veritabanlarının sürüm kontrol sisteminde (Git) güvenle yoksayılması, parola hash'leme.
 - 🧪 **Kapsamlı Test Altyapısı:** Uygulama modülleri, konfigürasyonu ve temel route erişimlerini doğrulayan entegre birim testleri.
 
 ---
 
-## 📦 Ekipman Yönetimi (CRUD) Özellikleri
+## 📦 Ekipman ve Rezervasyon Özellikleri
 
 - **Listeleme**: `/equipments` rotası, ekipmanları Bootstrap 5 tablosu ile listeler.
 - **Sayfalama**: Sayfa başına 10 kayıt gösterimi (SQLAlchemy 2.x `db.paginate` kullanılarak).
 - **Arama**: Üst kısımdaki arama çubuğu ile `name`, `code` ve `laboratory` alanlarında filtreleme (SQLAlchemy `ilike` kullanımı).
-- **Ekleme**: `/equipment/new` rotasında (login_required) Flask-WTF tabanlı yeni ekipman ekleme formu.
-- **Düzenleme**: `/equipment/<int:id>/edit` rotasında (login_required) mevcut ekipmanı güncelleme.
-- **Silme**: `/equipment/<int:id>/delete` rotasında (login_required) sadece POST isteklerini kabul eden, CSRF korumalı güvenli silme işlemi.
+- **Ekleme/Düzenleme/Silme**: Flask-WTF tabanlı formlar ve CSRF korumalı silme işlemleri.
+- **Ödünç Alma**: "Mevcut" durumdaki ekipmanlar için `POST /equipment/<int:id>/borrow` kullanılarak otomatik rezervasyon kaydı oluşturulur.
+- **İade Etme**: Sadece işlemi yapan kullanıcı tarafından, profil ekranı üzerinden `POST /reservation/<int:id>/return` ile gerçekleştirilen ve ekipmanı tekrar "Mevcut" duruma çeken yetki kontrollü işleyiş.
 
 ---
 
