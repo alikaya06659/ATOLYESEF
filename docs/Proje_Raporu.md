@@ -74,8 +74,14 @@ Temel route ve model import testleri içerir.
 - **RESTful API**: Harici servislerin ekipman listesine JSON formatında ulaşabilmesi için `GET /api/v1/equipments` ucu oluşturuldu (Türkçe karakter desteği sağlandı).
 
 ## Deploy
-Uygulamayı bir WSGI sunucusuna (Gunicorn, uWSGI) veya **Docker** konteynerine yerleştirerek üretim ortamına aktarabilirsiniz. Çevre değişkenleri (`SECRET_KEY`, `SQLALCHEMY_DATABASE_URI`) güvenli bir şekilde yönetilmelidir.
+Uygulama, üretim (production) ortamında kesintisiz ve yüksek performanslı çalışabilmesi için **Docker** ile kapsüllenmiştir. `flask run` yerine, `run:app` üzerinden **Gunicorn** WSGI sunucusunu çalıştıran yapı kuruludur.
 
+Docker imajını derlemek ve başlatmak için:
+```bash
+docker build -t atolyesef-app .
+docker run -d -p 5000:5000 --env-file .env.example atolyesef-app
+```
+*(Üretim ortamı için `.env.example` baz alınarak gizli ortam değişkenleri sağlayan gerçek bir `.env` kullanılmalıdır ve yerel veritabanı harici bir MySQL/PostgreSQL sunucusuna bağlanmalıdır.)*
 ## Gelecek Geliştirmeler
 - Front‑end için **React/Vue** entegrasyonu
 - Ekipman durum takibi için **WebSocket** bildirimleri

@@ -36,3 +36,11 @@
   - `app/main/routes.py` içine `GET /api/v1/equipments` RESTful API endpoint'i eklendi.
   - SQLAlchemy `db.select(Equipment)` ile sorgulanan veriler güvenli bir sözlük (dict) yapısına çevrildikten sonra `jsonify` ile sunuldu.
   - `config.py` içerisine Türkçe karakter desteği için `JSON_AS_ASCII = False` kuralı eklendi.
+
+## 2026-05-29
+- **14:00**: Proje üretim (production) ortamına hazırlandı ve Docker entegrasyonu tamamlandı.
+  - `gunicorn` bağımlılığı `requirements.txt` dosyasına eklendi.
+  - Uygulamayı geliştirme sunucusu yerine Gunicorn WSGI sunucusu ile ayağa kaldıran hafif `python:3.11-slim` tabanlı `Dockerfile` oluşturuldu.
+  - İmaj boyutunu küçültmek ve güvenliği artırmak (yerel veritabanını dışlamak vb.) amacıyla kapsamlı `.dockerignore` dosyası yapılandırıldı.
+  - Üretim ortamı yapılandırması için `.env.example` güncellendi.
+  - README, Proje Raporu ve AI Günlüğü dosyalarına Docker deployment adımları eklendi.

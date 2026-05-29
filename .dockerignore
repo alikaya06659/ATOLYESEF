@@ -1,0 +1,23 @@
+# Versiyon Kontrol
+.git
+.gitignore
+
+# Python ve Ortam
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+.venv
+.env
+
+# Veritabanı ve Yerel Veriler (Güvenlik Kısıtı)
+instance/
+*.db
+*.sqlite3
+
+# IDE ve OS Dosyaları
+.idea/
+.vscode/
+.DS_Store

@@ -122,6 +122,24 @@ Projenizi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları
 
 ---
 
+## 🐳 Docker ile Üretim (Production) Ortamı
+
+Proje tamamen üretime hazır (production-ready) bir şekilde Dockerize edilmiştir. Uygulama `flask run` yerine **Gunicorn** WSGI sunucusu üzerinden çalıştırılır.
+
+1. **İmajı Derleyin:**
+   ```bash
+   docker build -t atolyesef-app .
+   ```
+
+2. **Konteynerı Başlatın:**
+   ```bash
+   # Örnek çevre değişkenleri ile başlatmak için:
+   docker run -d -p 5000:5000 --env-file .env.example atolyesef-app
+   ```
+   *Not: Gerçek üretim ortamında `.env.example` kopyalanarak kendi gizli anahtarlarınızı barındıran bir `.env` dosyası oluşturulmalı ve `DATABASE_URL` MySQL/PostgreSQL gibi harici bir sunucuya bağlanmalıdır.*
+
+---
+
 ## 🧪 Testlerin Koşturulması
 
 Birim testlerini çalıştırmak için sanal ortamınız aktifken terminalde şu komutu yürütün:
