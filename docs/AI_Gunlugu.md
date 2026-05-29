@@ -44,3 +44,8 @@
   - İmaj boyutunu küçültmek ve güvenliği artırmak (yerel veritabanını dışlamak vb.) amacıyla kapsamlı `.dockerignore` dosyası yapılandırıldı.
   - Üretim ortamı yapılandırması için `.env.example` güncellendi.
   - README, Proje Raporu ve AI Günlüğü dosyalarına Docker deployment adımları eklendi.
+- **16:00**: Yönetici Bildirim Sistemi (Notification) ve Yerel Zaman Yönetimi eklendi.
+  - `Notification` modeli oluşturuldu ve kullanıcılarla (User) ilişkisi tanımlandı.
+  - Yöneticilerin kullanıcılara mesaj atabilmesi ve kullanıcıların bildirimleri görüntüleyip silebilmesi sağlandı.
+  - Kullanıcı profil sayfasına "Okunmamış Bildirimler" göstergesi (badge) ve bildirimleri listeleme özellikleri eklendi.
+  - Sistem genelindeki tarih ve saatlerin UTC yerine, yerel sunucu/kullanıcı saat diliminde (Timezone) düzgün görüntülenmesi amacıyla ayarlamalar yapıldı.

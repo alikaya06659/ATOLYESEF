@@ -13,7 +13,7 @@ from datetime import datetime
 @bp.route('/')
 @bp.route('/index')
 def index():
-    return render_template('base.html', title='Anasayfa')
+    return render_template('index.html', title='Anasayfa')
 
 # ---------------------------------------------------------------------------
 # Ekipman listesi - Sayfalama + Arama
@@ -110,7 +110,7 @@ def equipment_borrow(id):
     reservation = Reservation(
         user_id=current_user.id,
         equipment_id=equipment.id,
-        borrow_date=datetime.utcnow()
+        borrow_date=datetime.now()
     )
     db.session.add(reservation)
     db.session.commit()
@@ -133,7 +133,7 @@ def equipment_return(id):
         return redirect(url_for('auth.profile'))
         
     reservation.is_returned = True
-    reservation.return_date = datetime.utcnow()
+    reservation.return_date = datetime.now()
     
     # İlgili ekipmanı tekrar "Mevcut" yap
     if reservation.equipment:

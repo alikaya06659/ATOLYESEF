@@ -72,6 +72,8 @@ Temel route ve model import testleri içerir.
   - Kullanıcıların geçmiş ve aktif tüm rezervasyonları bu sayfa üzerinden yönetilebilmektedir.
 - **Özel Hata Yönetimi**: 404 (Sayfa Bulunamadı) ve 500 (Sunucu Hatası) gibi hatalar özelleştirilmiş, Bootstrap 5 uyumlu ve kullanıcıyı ana sayfaya yönlendiren şablonlarla kaplandı.
 - **RESTful API**: Harici servislerin ekipman listesine JSON formatında ulaşabilmesi için `GET /api/v1/equipments` ucu oluşturuldu (Türkçe karakter desteği sağlandı).
+- **Yönetici Bildirim Sistemi**: Yöneticilerin kullanıcılara sistem içi mesaj gönderebileceği; kullanıcıların da bu bildirimleri görüntüleyip yönetebileceği (okundu/silindi) bir iletişim modülü eklendi (`Notification` modeli).
+- **Yerel Zaman Yönetimi**: Uygulama içerisindeki tüm tarih ve saat gösterimleri, kullanıcı dostu yerel zaman formatına (Timezone) uygun hale getirildi.
 
 ## Deploy
 Uygulama, üretim (production) ortamında kesintisiz ve yüksek performanslı çalışabilmesi için **Docker** ile kapsüllenmiştir. `flask run` yerine, `run:app` üzerinden **Gunicorn** WSGI sunucusunu çalıştıran yapı kuruludur.

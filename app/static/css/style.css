@@ -300,5 +300,15 @@ footer a {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
 }
+
+/* Table Spacing Improvements */
+.table th, .table td {
+    padding: 1rem 1.5rem !important;
+    vertical-align: middle;
+}
+.table th {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+

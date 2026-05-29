@@ -1,47 +1,241 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if title %}{{ title }} - AtölyeŞef{% else %}AtölyeŞef{% endif %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="container mt-5">
-        <h2 class="mb-4">{{ title }}</h2>
-        <form method="POST" novalidate>
-            {{ form.hidden_tag() }}
-            <div class="mb-3">
-                {{ form.name.label(class="form-label") }}
-                {{ form.name(class="form-control {% if form.name.errors %}is-invalid{% endif %}") }}
-                {% for error in form.name.errors %}
-                    <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
+{% extends 'base.html' %}
+
+{% block title %}Yeni Ekipman Ekle{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row align-items-center">
+        <!-- Bilgi ve Dekorasyon Alanı -->
+        <div class="col-lg-5 mb-5 mb-lg-0 pe-lg-5">
+            <h1 class="display-5 fw-bold mb-4" style="background: linear-gradient(135deg, #f8fafc, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Envanteri<br>Genişlet.
+            </h1>
+            <p class="lead text-muted mb-4" style="font-size: 1.1rem; line-height: 1.8;">
+                AtölyeŞef envanterine yeni bir ekipman kaydederek laboratuvar kaynaklarını zenginleştirin. Sisteme eklenecek olan araçların doğru kodlanması, ilerideki arama ve takip süreçlerini büyük ölçüde kolaylaştıracaktır.
+            </p>
+            <ul class="list-unstyled mb-0" style="color: var(--text-secondary);">
+                <li class="mb-4 d-flex align-items-start">
+                    <div class="bg-dark p-2 rounded-circle me-3 border border-secondary">
+                        <svg class="text-success" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <strong class="d-block text-white mb-1">Benzersiz Kodlama</strong>
+                        <span class="small">Her donanım için daha önce kullanılmamış, laboratuvar standartlarına uygun bir demirbaş numarası (Örn: LAB-EE-01) belirleyin.</span>
+                    </div>
+                </li>
+                <li class="mb-4 d-flex align-items-start">
+                    <div class="bg-dark p-2 rounded-circle me-3 border border-secondary">
+                        <svg class="text-primary" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
+                    <div>
+                        <strong class="d-block text-white mb-1">Laboratuvar Bilgisi</strong>
+                        <span class="small">Ekipmanın fiziksel olarak bulunduğu odayı tam yazın. (Örn: Elektronik Lab, Kimya Lab).</span>
+                    </div>
+                </li>
+                <li class="d-flex align-items-start">
+                    <div class="bg-dark p-2 rounded-circle me-3 border border-secondary">
+                        <svg class="text-warning" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <strong class="d-block text-white mb-1">Güncel Durum</strong>
+                        <span class="small">Ekipman şu an tam işlevsel ve kullanıma hazır mı? Arızalı araçları belirtmeyi unutmayın.</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Form Alanı -->
+        <div class="col-lg-7">
+            <div class="card p-4 p-md-5 border-0 shadow-lg" style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border-radius: 16px;">
+                <h3 class="mb-4 text-white border-bottom pb-3 border-secondary" style="border-color: rgba(255,255,255,0.1) !important;">
+                    {% if form.name.data and request.method == 'GET' %}Ekipmanı Düzenle{% else %}Yeni Ekipman Kaydı{% endif %}
+                </h3>
+                
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            {{ form.name.label(class="form-label text-muted fw-bold small text-uppercase") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary text-muted" style="border-right: none;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                                </span>
+                                {{ form.name(class="form-control border-secondary bg-dark text-white shadow-none custom-input", placeholder="Örn: Multimetre") }}
+                            </div>
+                            {% for error in form.name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            {{ form.code.label(class="form-label text-muted fw-bold small text-uppercase") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary text-muted" style="border-right: none;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                </span>
+                                {{ form.code(class="form-control border-secondary bg-dark text-white shadow-none custom-input", placeholder="Örn: EE-MLT-05") }}
+                            </div>
+                            {% for error in form.code.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.laboratory.label(class="form-label text-muted fw-bold small text-uppercase") }}
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted" style="border-right: none;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path></svg>
+                            </span>
+                            {{ form.laboratory(class="form-control border-secondary bg-dark text-white shadow-none custom-input", placeholder="Örn: Prototip Atölyesi") }}
+                        </div>
+                        {% for error in form.laboratory.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.status.label(class="form-label text-muted fw-bold small text-uppercase") }}
+                        {{ form.status(class="form-select border-secondary bg-dark text-white shadow-none py-2") }}
+                        {% for error in form.status.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center mt-5 pt-3">
+                        <a href="{{ url_for('main.equipments') }}" class="btn btn-outline-secondary px-4 py-2 rounded-3 mb-3 mb-sm-0 w-100 w-sm-auto text-center">İptal ve Geri Dön</a>
+                        <button type="submit" class="btn btn-primary px-5 py-2 rounded-3 shadow w-100 w-sm-auto" style="background: linear-gradient(135deg, var(--accent), #2563eb); border: none;">
+                            <svg class="me-2 mb-1" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {% if form.name.data and request.method == 'GET' %}Değişiklikleri Kaydet{% else %}Sisteme Ekle{% endif %}
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="mb-3">
-                {{ form.code.label(class="form-label") }}
-                {{ form.code(class="form-control {% if form.code.errors %}is-invalid{% endif %}") }}
-                {% for error in form.code.errors %}
-                    <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="mb-3">
-                {{ form.laboratory.label(class="form-label") }}
-                {{ form.laboratory(class="form-control {% if form.laboratory.errors %}is-invalid{% endif %}") }}
-                {% for error in form.laboratory.errors %}
-                    <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="mb-3">
-                {{ form.status.label(class="form-label") }}
-                {{ form.status(class="form-select {% if form.status.errors %}is-invalid{% endif %}") }}
-                {% for error in form.status.errors %}
-                    <div class="invalid-feedback">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
-            <a href="{{ url_for('main.equipments') }}" class="btn btn-secondary ms-2">İptal</a>
-        </form>
+        </div>
     </div>
-</body>
-</html>
+    
+    <!-- Referans Listesi -->
+    <div class="row mt-5 pt-5 border-top border-secondary" style="border-color: rgba(255,255,255,0.05) !important;">
+        <div class="col-12">
+            <h4 class="mb-4 text-white d-flex align-items-center">
+                <svg class="me-2" style="color: var(--accent);" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                Referans Ekipman ve Kod Listesi
+            </h4>
+            <p class="text-muted mb-4">Aşağıdaki tablo, ekipman eklerken isimlendirme ve kodlama standardı oluşturmanıza yardımcı olmak için hazırlanmış örnek bir kılavuzdur.</p>
+            
+            <div class="custom-table-container mt-0 mb-5">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">#</th>
+                            <th style="width: 30%;">Ekipman Adı</th>
+                            <th style="width: 35%;">Örnek Demirbaş Kodu</th>
+                            <th style="width: 30%;">Önerilen Laboratuvar / Alan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td><strong>Osiloskop</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-EE-OSC-01</span></td><td>Elektronik Lab</td></tr>
+                        <tr><td>2</td><td><strong>Multimetre</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-EE-MLT-01</span></td><td>Elektronik Lab</td></tr>
+                        <tr><td>3</td><td><strong>Güç Kaynağı</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-EE-PWR-01</span></td><td>Elektronik Lab</td></tr>
+                        <tr><td>4</td><td><strong>Sinyal Jeneratörü</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-EE-SGN-01</span></td><td>Elektronik Lab</td></tr>
+                        <tr><td>5</td><td><strong>Havya İstasyonu</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-EE-SLD-01</span></td><td>Elektronik Lab</td></tr>
+                        <tr><td>6</td><td><strong>Mikroskop</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-BIO-MIC-01</span></td><td>Biyoloji Lab</td></tr>
+                        <tr><td>7</td><td><strong>Santrifüj</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-BIO-CEN-01</span></td><td>Biyoloji Lab</td></tr>
+                        <tr><td>8</td><td><strong>Hassas Terazi</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-CHM-SCL-01</span></td><td>Kimya Lab</td></tr>
+                        <tr><td>9</td><td><strong>Spektrofotometre</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-CHM-SPC-01</span></td><td>Kimya Lab</td></tr>
+                        <tr><td>10</td><td><strong>Etüv Fırını</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-CHM-OVN-01</span></td><td>Kimya Lab</td></tr>
+                        <tr><td>11</td><td><strong>3D Yazıcı</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-ME-3DP-01</span></td><td>Prototip Atölyesi</td></tr>
+                        <tr><td>12</td><td><strong>CNC Freze</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-ME-CNC-01</span></td><td>Prototip Atölyesi</td></tr>
+                        <tr><td>13</td><td><strong>Kumpas</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-ME-CAL-01</span></td><td>Prototip Atölyesi</td></tr>
+                        <tr><td>14</td><td><strong>Lazer Kesici</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-ME-LSR-01</span></td><td>Prototip Atölyesi</td></tr>
+                        <tr><td>15</td><td><strong>Mantar Pano</strong></td><td><span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);">LAB-GEN-BRD-01</span></td><td>Genel Kullanım</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-input {
+        border-left: none !important;
+        padding-left: 0 !important;
+    }
+    .input-group-text, .form-control, .form-select {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: var(--accent) !important;
+    }
+    .input-group:focus-within .input-group-text, 
+    .input-group:focus-within .form-control {
+        border-color: var(--accent) !important;
+    }
+    .input-group:focus-within .input-group-text svg {
+        color: var(--accent) !important;
+    }
+    select option { 
+        background-color: var(--bg-primary); 
+        color: var(--text-primary); 
+    }
+    
+    /* Responsive button logic */
+    @media (min-width: 576px) {
+        .w-sm-auto { width: auto !important; }
+    }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const codeInput = document.getElementById('code');
+    const nameInput = document.getElementById('name');
+    const labInput = document.getElementById('laboratory');
+    
+    // Prefix to data mapping
+    const equipmentMap = {
+        'LAB-EE-OSC': { name: 'Osiloskop', lab: 'Elektronik Lab' },
+        'LAB-EE-MLT': { name: 'Multimetre', lab: 'Elektronik Lab' },
+        'LAB-EE-PWR': { name: 'Güç Kaynağı', lab: 'Elektronik Lab' },
+        'LAB-EE-SGN': { name: 'Sinyal Jeneratörü', lab: 'Elektronik Lab' },
+        'LAB-EE-SLD': { name: 'Havya İstasyonu', lab: 'Elektronik Lab' },
+        'LAB-BIO-MIC': { name: 'Mikroskop', lab: 'Biyoloji Lab' },
+        'LAB-BIO-CEN': { name: 'Santrifüj', lab: 'Biyoloji Lab' },
+        'LAB-CHM-SCL': { name: 'Hassas Terazi', lab: 'Kimya Lab' },
+        'LAB-CHM-SPC': { name: 'Spektrofotometre', lab: 'Kimya Lab' },
+        'LAB-CHM-OVN': { name: 'Etüv Fırını', lab: 'Kimya Lab' },
+        'LAB-ME-3DP': { name: '3D Yazıcı', lab: 'Prototip Atölyesi' },
+        'LAB-ME-CNC': { name: 'CNC Freze', lab: 'Prototip Atölyesi' },
+        'LAB-ME-CAL': { name: 'Kumpas', lab: 'Prototip Atölyesi' },
+        'LAB-ME-LSR': { name: 'Lazer Kesici', lab: 'Prototip Atölyesi' },
+        'LAB-GEN-BRD': { name: 'Mantar Pano', lab: 'Genel Kullanım' }
+    };
+
+    if (codeInput && nameInput && labInput) {
+        codeInput.addEventListener('input', function(e) {
+            let val = e.target.value.toUpperCase();
+            
+            for (const prefix in equipmentMap) {
+                if (val.startsWith(prefix)) {
+                    // Only auto-fill if fields are empty or were previously auto-filled
+                    if (nameInput.value.trim() === '' || nameInput.dataset.autofilled === 'true') {
+                        nameInput.value = equipmentMap[prefix].name;
+                        nameInput.dataset.autofilled = 'true';
+                        // Add a quick pulse effect to show it was autofilled
+                        nameInput.style.transition = 'background-color 0.3s ease';
+                        nameInput.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
+                        setTimeout(() => nameInput.style.backgroundColor = '', 400);
+                    }
+                    if (labInput.value.trim() === '' || labInput.dataset.autofilled === 'true') {
+                        labInput.value = equipmentMap[prefix].lab;
+                        labInput.dataset.autofilled = 'true';
+                        // Add a quick pulse effect
+                        labInput.style.transition = 'background-color 0.3s ease';
+                        labInput.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
+                        setTimeout(() => labInput.style.backgroundColor = '', 400);
+                    }
+                    return; // Stop checking once we find a match
+                }
+            }
+        });
+
+        // If user manually types in name or lab, remove the autofilled flag 
+        // so we don't aggressively overwrite their custom input later
+        nameInput.addEventListener('input', function() { this.dataset.autofilled = 'false'; });
+        labInput.addEventListener('input', function() { this.dataset.autofilled = 'false'; });
+    }
+});
+</script>
+{% endblock %}

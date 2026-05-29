@@ -23,7 +23,7 @@ class RegisterForm(FlaskForm):
             raise ValidationError('Bu e-posta adresi zaten kayıtlı.')
 
 class LoginForm(FlaskForm):
-    email = StringField('E-posta', validators=[DataRequired(), Email()])
+    username = StringField('Kullanıcı Adı', validators=[DataRequired()])
     password = PasswordField('Şifre', validators=[DataRequired()])
     remember_me = BooleanField('Beni Hatırla')
     submit = SubmitField('Giriş Yap')

@@ -5,13 +5,14 @@ from typing import List, Optional
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from flask_login import UserMixin
 from app import db
 
 # ---------------------------------------------------------------------------
 # Model 1: User (Kullanıcı)
 # ---------------------------------------------------------------------------
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     """Sisteme kayıtlı kullanıcıları temsil eder.
 
     İlişkiler:
@@ -35,7 +36,7 @@ class User(db.Model):
         db.String(255), nullable=True, default="default.png"
     )
     created_at: db.Mapped[datetime] = db.mapped_column(
-        db.DateTime, default=datetime.utcnow, nullable=False
+        db.DateTime, default=datetime.now, nullable=False
     )
 
     # --- İlişkiler ---
@@ -54,6 +55,16 @@ class User(db.Model):
     def check_password(self, password: str) -> bool:
         """Verilen düz metin parolayı hash ile karşılaştırır."""
         return check_password_hash(self.password_hash, password)
+
+    def unread_notifications_count(self) -> int:
+        """Kullanıcının okunmamış bildirim sayısını döndürür."""
+        from app.models import Notification # Import here to avoid circular dependency issues if any
+        count = db.session.scalar(
+            db.select(db.func.count(Notification.id))
+            .where(Notification.recipient_id == self.id)
+            .where(Notification.is_read == False)
+        )
+        return count or 0
 
     def __repr__(self) -> str:
         return f"<User id={self.id} username='{self.username}'>"
@@ -91,7 +102,7 @@ class Equipment(db.Model):
         server_default="Mevcut",
     )
     created_at: db.Mapped[datetime] = db.mapped_column(
-        db.DateTime, default=datetime.utcnow, nullable=False
+        db.DateTime, default=datetime.now, nullable=False
     )
 
     # --- Tablo seviyesi kısıt (CHECK CONSTRAINT) ---
@@ -160,3 +171,33 @@ class Reservation(db.Model):
             f"<Reservation id={self.id} user_id={self.user_id} "
             f"equipment_id={self.equipment_id} is_returned={self.is_returned}>"
         )
+
+# ---------------------------------------------------------------------------
+# Model 4: Notification (Bildirim)
+# ---------------------------------------------------------------------------
+
+class Notification(db.Model):
+    """Kullanıcılar arasındaki bildirimleri/mesajları temsil eder."""
+
+    __tablename__ = "notification"
+
+    id: db.Mapped[int] = db.mapped_column(primary_key=True)
+    sender_id: db.Mapped[int] = db.mapped_column(
+        db.ForeignKey("user.id"), nullable=False
+    )
+    recipient_id: db.Mapped[int] = db.mapped_column(
+        db.ForeignKey("user.id"), nullable=False
+    )
+    content: db.Mapped[str] = db.mapped_column(db.Text, nullable=False)
+    is_read: db.Mapped[bool] = db.mapped_column(
+        db.Boolean, default=False, nullable=False
+    )
+    created_at: db.Mapped[datetime] = db.mapped_column(
+        db.DateTime, default=datetime.now, nullable=False
+    )
+
+    sender: db.Mapped["User"] = db.relationship("User", foreign_keys=[sender_id])
+    recipient: db.Mapped["User"] = db.relationship("User", foreign_keys=[recipient_id])
+
+    def __repr__(self) -> str:
+        return f"<Notification id={self.id} from={self.sender_id} to={self.recipient_id}>"

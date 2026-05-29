@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; padding: 2rem 0;">
+    <h1 style="font-size: 3rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #ffffff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        AtölyeŞef'e Hoş Geldiniz
+    </h1>
+    <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 3rem auto; line-height: 1.6;">
+        Meslek Yüksekokulu laboratuvar ve atölye ekipmanlarını modern, güvenli ve kolay bir şekilde yönetin. 
+        Kayıt olun, envanteri inceleyin ve ihtiyacınız olan araçları saniyeler içinde rezerve edin.
+    </p>
+
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4rem;">
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.equipments') }}" class="nav-btn" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Ekipmanları Görüntüle
+            </a>
+            <a href="{{ url_for('auth.profile') }}" style="display: inline-block; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; color: var(--text-primary); border: 1px solid var(--border); background: var(--bg-tertiary); transition: all 0.3s ease; font-size: 1.1rem;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Profilim
+            </a>
+        {% else %}
+            <a href="{{ url_for('auth.register') }}" class="nav-btn" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                Kayıt Ol ve Başla
+            </a>
+            <a href="{{ url_for('auth.login') }}" style="display: inline-block; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; color: var(--text-primary); border: 1px solid var(--border); background: var(--bg-tertiary); transition: all 0.3s ease; font-size: 1.1rem;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+                Zaten Hesabın Var Mı? Giriş Yap
+            </a>
+        {% endif %}
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; text-align: left;">
+        <div style="padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <h3 style="color: var(--accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                Hızlı Envanter
+            </h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">Tüm laboratuvar materyallerini, anlık durumları ve bulundukları laboratuvarları ile birlikte görüntüleyin.</p>
+        </div>
+        <div style="padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <h3 style="color: var(--success); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Kolay Rezervasyon
+            </h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">İhtiyacınız olan ekipmanı sadece tek tıkla ödünç alın ve işiniz bittiğinde profilinizden anında iade edin.</p>
+        </div>
+        <div style="padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <h3 style="color: var(--warning); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Güvenli Altyapı
+            </h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;">Uygulama, en modern şifreleme ve CSRF korumalı güvenli oturum yönetimi standartlarıyla donatılmıştır.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

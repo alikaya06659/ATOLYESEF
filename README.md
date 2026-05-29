@@ -15,6 +15,8 @@
 - 🔐 **Kullanıcı Kimlik Doğrulama (Auth):** Flask‑Login, Flask‑WTF ve CSRF korumalı formlarla tam güvenli kayıt, giriş ve çıkış akışı.
 - 👤 **Profil ve Avatar Yönetimi:** Kullanıcıların bilgilerini güncelleyebileceği, güvenli (secure_filename) avatar yükleme destekli kişisel profil sayfası.
 - 📦 **Rezervasyon Takibi:** Ekipmanların "Ödünç Al" ve "İade Et" işlemleriyle takip edildiği, geçmiş işlemleri barındıran yetki kontrollü rezervasyon akışı.
+- 🔔 **Yönetici Bildirimleri:** Yöneticilerin kullanıcılara sistem içi mesaj gönderebileceği, okunmamış bildirim takibi yapılabilen mesajlaşma/bildirim sistemi.
+- 🕒 **Yerel Zaman Yönetimi:** Uygulama genelinde tüm tarih/saat verilerinin UTC yerine yerel saat dilimine göre tutarlı bir şekilde gösterimi.
 - 🚨 **Özel Hata Yönetimi:** Bootstrap 5 tasarımlı 404 (Sayfa Bulunamadı) ve 500 (Sunucu Hatası) sayfalarıyla kullanıcı dostu hata yönlendirmesi.
 - 🔌 **RESTful API Desteği:** Dış sistemlerin veritabanındaki ekipmanlara JSON formatında erişebilmesi için oluşturulmuş özel API katmanı.
 - 🛡️ **Güvenlik Politikası:** Çevre değişkenlerinin (`.env`) ve yerel veritabanlarının sürüm kontrol sisteminde (Git) güvenle yoksayılması, parola hash'leme.

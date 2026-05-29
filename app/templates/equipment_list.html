@@ -12,10 +12,27 @@
       <button type="submit" class="btn btn-primary w-100">Ara</button>
     </div>
   </form>
+  <style>
+    .custom-table-container { width: 100%; overflow-x: auto; margin-top: 1.5rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .custom-table { width: 100%; border-collapse: collapse; min-width: 800px; }
+    .custom-table th { background: rgba(0,0,0,0.2); padding: 18px 24px; text-align: left; color: var(--text-secondary); font-weight: 600; border-bottom: 1px solid var(--border); letter-spacing: 0.05em; font-size: 0.95rem; }
+    .custom-table td { padding: 18px 24px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-primary); font-size: 1rem; }
+    .custom-table tbody tr { transition: background-color 0.2s ease; }
+    .custom-table tbody tr:hover { background-color: rgba(255,255,255,0.03); }
+    .action-btn { padding: 8px 14px; border-radius: 6px; font-size: 0.9rem; text-decoration: none; cursor: pointer; display: inline-block; font-weight: 600; transition: all 0.2s ease; }
+    .action-btn:hover { transform: translateY(-1px); }
+    .btn-edit { border: 1px solid #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); margin-right: 6px; }
+    .btn-edit:hover { background: #10b981; color: #fff; }
+    .btn-borrow { border: 1px solid #3b82f6; color: #3b82f6; background: rgba(59, 130, 246, 0.1); margin-right: 6px; }
+    .btn-borrow:hover { background: #3b82f6; color: #fff; }
+    .btn-delete { border: 1px solid #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    .btn-delete:hover { background: #ef4444; color: #fff; }
+  </style>
+
   <!-- Ekipman Tablosu -->
-  <div class="table-responsive">
-    <table class="table table-hover align-middle">
-      <thead class="table-dark">
+  <div class="custom-table-container">
+    <table class="custom-table">
+      <thead>
         <tr>
           <th>#</th>
           <th>İsim</th>
@@ -30,48 +47,38 @@
         {% for eq in equipments %}
         <tr>
           <td>{{ eq.id }}</td>
-          <td>{{ eq.name }}</td>
-          <td>{{ eq.code }}</td>
+          <td><strong>{{ eq.name }}</strong></td>
+          <td><span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-family: monospace;">{{ eq.code }}</span></td>
           <td>{{ eq.laboratory }}</td>
-          <td>{{ eq.status }}</td>
-          <td>{{ eq.created_at.strftime('%d.%m.%Y') if eq.created_at else '' }}</td>
           <td>
-            <a href="{{ url_for('main.equipment_edit', id=eq.id) }}" class="btn btn-sm btn-outline-success me-1">Düzenle</a>
+            {% if eq.status == 'Mevcut' %}
+              <span style="color: #10b981; font-weight: 600;">{{ eq.status }}</span>
+            {% elif eq.status == 'Arızalı' %}
+              <span style="color: #ef4444; font-weight: 600;">{{ eq.status }}</span>
+            {% else %}
+              <span style="color: #f59e0b; font-weight: 600;">{{ eq.status }}</span>
+            {% endif %}
+          </td>
+          <td>{{ eq.created_at.strftime('%d.%m.%Y') if eq.created_at else '-' }}</td>
+          <td style="white-space: nowrap;">
+            <a href="{{ url_for('main.equipment_edit', id=eq.id) }}" class="action-btn btn-edit">Düzenle</a>
             
             {% if eq.status == 'Mevcut' %}
-            <form method="POST" action="{{ url_for('main.equipment_borrow', id=eq.id) }}" class="d-inline">
-              {{ csrf_token() }}
-              <button type="submit" class="btn btn-sm btn-outline-primary me-1">Ödünç Al</button>
+            <form method="POST" action="{{ url_for('main.equipment_borrow', id=eq.id) }}" style="display: inline-block;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="action-btn btn-borrow">Ödünç Al</button>
             </form>
             {% endif %}
 
             <!-- Silme Butonu -->
-            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ eq.id }}">Sil</button>
-            <!-- Silme Modal -->
-            <div class="modal fade" id="deleteModal{{ eq.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ eq.id }}" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="deleteModalLabel{{ eq.id }}">Silme Onayı</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
-                  </div>
-                  <div class="modal-body">
-                    <p>"{{ eq.name }}" ekipmanını silmek istediğinizden emin misiniz?</p>
-                  </div>
-                  <div class="modal-footer">
-                    <form method="POST" action="{{ url_for('main.equipment_delete', id=eq.id) }}">
-                      {{ csrf_token() }}
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                      <button type="submit" class="btn btn-danger">Evet, Sil</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <form method="POST" action="{{ url_for('main.equipment_delete', id=eq.id) }}" style="display: inline-block;" onsubmit="return confirm('{{ eq.name }} ekipmanını silmek istediğinizden emin misiniz?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="action-btn btn-delete">Sil</button>
+            </form>
           </td>
         </tr>
         {% else %}
-        <tr><td colspan="7" class="text-center text-muted">Kayıt bulunamadı.</td></tr>
+        <tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 30px;">Kayıt bulunamadı.</td></tr>
         {% endfor %}
       </tbody>
     </table>

@@ -8,8 +8,13 @@
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
-                    {% set avatar_file = current_user.avatar if current_user.avatar else 'default.png' %}
-                    <img src="{{ url_for('static', filename='avatars/' + avatar_file) }}" alt="Profil Fotoğrafı" class="rounded-circle img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% if current_user.avatar %}
+                        <img src="{{ url_for('static', filename='avatars/' + current_user.avatar) }}" alt="Profil Fotoğrafı" class="rounded-circle img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover; border: 4px solid rgba(255,255,255,0.1); padding: 4px; background: var(--bg-secondary);">
+                    {% else %}
+                        <div class="rounded-circle mb-3 mx-auto" style="width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent), #10b981); color: white; font-size: 4rem; font-weight: 700; border: 4px solid rgba(255,255,255,0.1); padding: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            {{ current_user.username[0]|upper }}
+                        </div>
+                    {% endif %}
                     <h4 class="card-title">{{ current_user.username }}</h4>
                     <p class="text-muted">{{ current_user.email }}</p>
                     <p class="small text-muted">Kayıt Tarihi: {{ current_user.created_at.strftime('%d.%m.%Y') }}</p>
@@ -55,11 +60,14 @@
 
         <!-- Rezervasyonlar -->
         <div class="col-md-8">
-            <h3 class="mb-3">Aktif Rezervasyonlarım</h3>
-            <div class="table-responsive bg-white shadow-sm rounded p-3 mb-4">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+            <h3 class="mb-3">
+                {% if current_user.username == 'admin' %}Sistemdeki Aktif Rezervasyonlar{% else %}Aktif Rezervasyonlarım{% endif %}
+            </h3>
+            <div class="custom-table-container">
+                <table class="custom-table">
+                    <thead>
                         <tr>
+                            {% if current_user.username == 'admin' %}<th>Kullanıcı</th>{% endif %}
                             <th>Ekipman</th>
                             <th>Kod</th>
                             <th>Alış Tarihi</th>
@@ -71,31 +79,44 @@
                         {% for r in reservations if not r.is_returned %}
                             {% set active_found = true %}
                             <tr>
+                                {% if current_user.username == 'admin' %}
+                                <td><span class="badge bg-primary text-white" style="font-size:0.9em; padding: 6px 10px;">@{{ r.user.username }}</span></td>
+                                {% endif %}
                                 <td>{{ r.equipment.name }}</td>
                                 <td>{{ r.equipment.code }}</td>
                                 <td>{{ r.borrow_date.strftime('%d.%m.%Y %H:%M') }}</td>
                                 <td>
+                                    {% if r.user_id == current_user.id %}
                                     <form method="POST" action="{{ url_for('main.equipment_return', id=r.id) }}" class="d-inline">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                         <button type="submit" class="btn btn-sm btn-outline-warning">İade Et</button>
                                     </form>
+                                    {% else %}
+                                    <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#messageModal{{ r.id }}">
+                                        <svg class="me-1" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        Mesaj Gönder
+                                    </button>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
                         {% if not active_found %}
                             <tr>
-                                <td colspan="4" class="text-center text-muted">Aktif rezervasyonunuz bulunmamaktadır.</td>
+                                <td colspan="{% if current_user.username == 'admin' %}5{% else %}4{% endif %}" class="text-center text-muted py-4">Aktif rezervasyon bulunmamaktadır.</td>
                             </tr>
                         {% endif %}
                     </tbody>
                 </table>
             </div>
 
-            <h3 class="mb-3">Geçmiş Rezervasyonlarım</h3>
-            <div class="table-responsive bg-white shadow-sm rounded p-3">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+            <h3 class="mb-3 mt-5">
+                {% if current_user.username == 'admin' %}Sistemdeki Geçmiş Rezervasyonlar{% else %}Geçmiş Rezervasyonlarım{% endif %}
+            </h3>
+            <div class="custom-table-container">
+                <table class="custom-table">
+                    <thead>
                         <tr>
+                            {% if current_user.username == 'admin' %}<th>Kullanıcı</th>{% endif %}
                             <th>Ekipman</th>
                             <th>Kod</th>
                             <th>Alış Tarihi</th>
@@ -107,6 +128,9 @@
                         {% for r in reservations if r.is_returned %}
                             {% set past_found = true %}
                             <tr>
+                                {% if current_user.username == 'admin' %}
+                                <td><span class="badge bg-secondary text-white" style="font-size:0.9em; padding: 6px 10px;">@{{ r.user.username }}</span></td>
+                                {% endif %}
                                 <td>{{ r.equipment.name }}</td>
                                 <td>{{ r.equipment.code }}</td>
                                 <td>{{ r.borrow_date.strftime('%d.%m.%Y %H:%M') }}</td>
@@ -115,7 +139,7 @@
                         {% endfor %}
                         {% if not past_found %}
                             <tr>
-                                <td colspan="4" class="text-center text-muted">Geçmiş rezervasyonunuz bulunmamaktadır.</td>
+                                <td colspan="{% if current_user.username == 'admin' %}5{% else %}4{% endif %}" class="text-center text-muted py-4">Geçmiş rezervasyon bulunmamaktadır.</td>
                             </tr>
                         {% endif %}
                     </tbody>
@@ -124,4 +148,38 @@
         </div>
     </div>
 </div>
+
+{% endblock %}
+
+{% block modals %}
+<!-- Admin Modals for Sending Messages -->
+{% if current_user.username == 'admin' %}
+    {% for r in reservations if not r.is_returned %}
+        {% if r.user_id != current_user.id %}
+        <div class="modal fade" id="messageModal{{ r.id }}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;">
+              <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title text-white">@{{ r.user.username }} Kullanıcısına Mesaj</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+              </div>
+              <div class="modal-body text-start">
+                <form action="{{ url_for('auth.send_message', recipient_id=r.user_id) }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div class="mb-4">
+                        <label class="form-label text-muted small text-uppercase">Mesajınız</label>
+                        <textarea class="form-control" name="message_content" rows="4" required placeholder="Lütfen ekipmanı en kısa sürede atölyeye iade ediniz..." style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text-primary);"></textarea>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-outline-secondary me-2 px-4" data-bs-dismiss="modal">İptal</button>
+                        <button type="submit" class="btn btn-info px-4 text-white" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); border: none;">Gönder</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 {% endblock %}
